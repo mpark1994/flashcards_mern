@@ -4,7 +4,12 @@ config()
 import express, { Request, Response} from "express"
 import mongoose from 'mongoose'
 import cors from 'cors'
-import Deck from "./models/Deck"
+import { getDecksController } from "./controllers/getDecksController"
+import { deleteDeckController } from "./controllers/deleteDeckController"
+import { createDeckController } from "./controllers/createDeckController"
+import { createCardForDeckController } from "./controllers/createCardForDeckController"
+import { getDeckController } from "./controllers/getDeckController"
+import { deleteCardOnDeckController } from "./controllers/deleteCardOnDeckController"
 
 const PORT = 5000
 
@@ -16,32 +21,12 @@ app.use(cors({
 // Express middleware - allows JSON post requests
 app.use(express.json())
 
-app.get("/", (req: Request, res: Response) => {
-    res.send("Hello World!")
-})
-
-// Load decks
-app.get("/decks", async (req: Request, res: Response) => {
-    // Fetch all decks
-    const decks = await Deck.find()
-    res.json(decks)
-})
-
-// Create new deck
-app.post("/decks", async (req: Request, res: Response) => {
-    const newDeck = new Deck({
-        title: req.body.title
-    })
-    const createdDeck = await newDeck.save()
-    res.json(createdDeck)
-})
-
-// Delete deck
-app.delete("/decks/:deckId", async (req: Request, res: Response) => {
-    const deckId = req.params.deckId
-    const deck = await Deck.findByIdAndDelete(deckId)
-    res.json(deck)
-})
+app.get("/decks", getDecksController)
+app.post("/decks", createDeckController)
+app.delete("/decks/:deckId", deleteDeckController)
+app.get("/decks/:deckId", getDeckController)
+app.post("/decks/:deckId/cards", createCardForDeckController)
+app.delete("/decks/:deckId/cards/:index", deleteCardOnDeckController)
 
 // URL cannot be null
 const db = mongoose.connect(process.env.MONGO_URL!)

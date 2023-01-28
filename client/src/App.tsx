@@ -23,6 +23,7 @@ function App() {
     setDecks(decks.filter(deck => deck._id !== deckId))
   }
 
+  // get decks
   useEffect(() => {
     async function fetchDecks() {
       const newDecks = await getDecks()
@@ -32,7 +33,9 @@ function App() {
   }, [])
 
   return (
+    <div className="container">
     <div className="App">
+      <h1>Your Decks</h1>
       <ul className="decks">
         {decks.map((deck) => (
           <li key={deck._id}>
@@ -52,6 +55,7 @@ function App() {
         />
         <button>Create Deck</button>
       </form>
+    </div>
     </div>
   )
 }
