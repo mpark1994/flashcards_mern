@@ -20,18 +20,27 @@ app.get("/", (req: Request, res: Response) => {
     res.send("Hello World!")
 })
 
+// Load decks
 app.get("/decks", async (req: Request, res: Response) => {
     // Fetch all decks
     const decks = await Deck.find()
     res.json(decks)
 })
 
+// Create new deck
 app.post("/decks", async (req: Request, res: Response) => {
     const newDeck = new Deck({
         title: req.body.title
     })
     const createdDeck = await newDeck.save()
     res.json(createdDeck)
+})
+
+// Delete deck
+app.delete("/decks/:deckId", async (req: Request, res: Response) => {
+    const deckId = req.params.deckId
+    const deck = await Deck.findByIdAndDelete(deckId)
+    res.json(deck)
 })
 
 // URL cannot be null
